@@ -6,21 +6,23 @@ from src.unarchivator import unarchive
 from src.headers import set_headers
 from src.script import add_tables
 
+#UERP0
 
 if __name__ == "__main__":
-    a = "all"
+    a = input()
     try: 
         shutil.rmtree('archives')
         shutil.rmtree('extracted')
-        os.remove('stations.db')
     except Exception: pass 
+
     os.mkdir('archives')
     os.mkdir('extracted')
     download_stations(a)
     extract_stations(a)
-    unarchive()
-    set_headers(a)
+    unarchive(a)
+    set_headers()
     add_tables(a)
+
     try: 
         shutil.rmtree('archives')
         shutil.rmtree('extracted')
