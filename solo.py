@@ -9,12 +9,13 @@ from src.script import add_tables
 #UERP0
 
 if __name__ == "__main__":
-    a = input()
     try: 
         shutil.rmtree('archives')
         shutil.rmtree('extracted')
     except Exception: pass 
 
+    a = input()
+    
     os.mkdir('archives')
     os.mkdir('extracted')
     download_stations(a)

@@ -1,14 +1,15 @@
 import os
 import sqlite3
 import pandas as pd
+from datetime import datetime
 
-
-def add_tables(a : str):
+def add_tables(a: str):
     if a == "all":
         csv_folder_path = 'extracted'
 
         conn = sqlite3.connect('stations.db')
         cursor = conn.cursor()
+        print("ok")
 
         for filename in os.listdir(csv_folder_path):
             if filename.endswith('.csv'):
@@ -21,26 +22,35 @@ def add_tables(a : str):
                 
                 df = pd.read_csv(csv_file_path)
                 
+                # Filter data for today and future dates
+                df['date'] = pd.to_datetime(df['date'])
+                today = datetime.today().strftime(r'%Y-%m-%d')
+                df = df[df['date'] >= today]
+                
                 cursor.execute(f"""
-                CREATE TABLE IF NOT EXISTS {table_name} (
+                CREATE TABLE IF NOT EXISTS data (
                     date TEXT,
-                    tavg REAL,
-                    tmin REAL,
-                    tmax REAL,
+                    hour INTEGER,
+                    temp REAL,
+                    dwpt REAL,
+                    rhum INTEGER,
                     prcp REAL,
                     snow INTEGER,
                     wdir INTEGER,
                     wspd REAL,
                     wpgt REAL,
                     pres REAL,
-                    tsun INTEGER
+                    tsun INTEGER,
+                    coco TEXT,
+                    station TEXT
                 )
-            """)
-            conn.commit()
+                """)
                 
-        df.to_sql(table_name, conn, if_exists='append', index=False)
+                df.to_sql('data', conn, if_exists='append', index=False)
 
+        conn.commit()
         conn.close()
+
     else:
         csv_folder_path = 'extracted'
 
@@ -54,30 +64,21 @@ def add_tables(a : str):
                 if table_name[0].isdigit():
                     table_name = f"_{table_name}"
                 
+                print(table_name)
+                
                 csv_file_path = os.path.join(csv_folder_path, filename)
                 
                 df = pd.read_csv(csv_file_path)
                 
-                cursor.execute(f"DROP TABLE {a}")
-                conn.commit()
-
-                cursor.execute(f"""
-                CREATE TABLE IF NOT EXISTS {a} (
-                    date TEXT,
-                    tavg REAL,
-                    tmin REAL,
-                    tmax REAL,
-                    prcp REAL,
-                    snow INTEGER,
-                    wdir INTEGER,
-                    wspd REAL,
-                    wpgt REAL,
-                    pres REAL,
-                    tsun INTEGER
-                )
-            """)
-            conn.commit()
+                # Filter data for today and future dates
+                df['date'] = pd.to_datetime(df['date'])
+                today = datetime.today().strftime(r'%Y-%m-%d')
+                df = df[df['date'] >= today]
                 
-        df.to_sql(table_name, conn, if_exists='append', index=False)
-        
+                cursor.execute(f"DELETE FROM data WHERE station = '{a}'")
+                conn.commit()
+                
+                df.to_sql('data', conn, if_exists='append', index=False)
+                
+        conn.commit()
         conn.close()

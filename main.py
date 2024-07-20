@@ -18,12 +18,10 @@ if __name__ == "__main__":
     os.mkdir('extracted')
     download_stations(a)
     extract_stations(a)
-    unarchive()
-    set_headers(a)
+    unarchive(a)
+    set_headers()
     add_tables(a)
     try: 
         shutil.rmtree('archives')
         shutil.rmtree('extracted')
     except Exception: pass 
-
-

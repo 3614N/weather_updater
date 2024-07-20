@@ -22,7 +22,7 @@ def unarchive(a):
                     with open(destination_path, 'wb') as f_out:
                         shutil.copyfileobj(f_in, f_out)
     else:
-        while len(os.listdir(source_folder)) == 0: pass
+        while   f"{a}.csv.gz" not in os.listdir(source_folder): pass
 
         for filename in os.listdir(source_folder):
             if filename.endswith('.gz'):
