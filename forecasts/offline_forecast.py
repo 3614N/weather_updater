@@ -15,17 +15,15 @@ date = f"2000-{date}"
 stations_data = get_weather_data(link, date, hour)
 weather_dict = {station: {'temp': temp, 'dwpt': dwpt, 'rhum': rhum, 'pres': pres} for station, temp, dwpt, rhum, pres in stations_data}
 
-
 [square_corners, square_centers] = separator(lat1, lon1, lat2, lon2, n_width, n_height)
 
 df = generating_stations(link)
 
 interpolated_data = []
 for center in square_centers:
-    closest_stations = calculate_closest_stations(df, center[0], center[1], 20)
+    closest_stations = calculate_closest_stations(df, center[0], center[1], 10)
     interpolated_values = interpolate_weather(closest_stations, weather_dict)
     if interpolated_values is not None:
         interpolated_data.append([center, interpolated_values])
-
 
 map_constructor((lat1 + lat2) / 2, (lon1 + lon2) / 2, interpolated_data, square_corners)

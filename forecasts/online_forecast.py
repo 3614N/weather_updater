@@ -2,7 +2,7 @@ from forecasts.src.closest_station import calculate_closest_stations
 from forecasts.src.extract_data_from_database import get_weather_data, generating_stations
 from forecasts.src.area_separator import separator
 from forecasts.src.values_interpolator import interpolate_weather
-from forecasts.src.visualization import map_constructor
+from forecasts.src.visualization import map_constructor_temp, map_constructor_rhum, map_constructor_pres
 
 
 link = "../forecasts.db"
@@ -25,4 +25,6 @@ for center in square_centers:
     if interpolated_values is not None:
         interpolated_data.append([center, interpolated_values])
 
-map_constructor((lat1 + lat2) / 2, (lon1 + lon2) / 2, interpolated_data, square_corners)
+map_constructor_temp((lat1 + lat2) / 2, (lon1 + lon2) / 2, interpolated_data, square_corners)
+map_constructor_rhum((lat1 + lat2) / 2, (lon1 + lon2) / 2, interpolated_data, square_corners)
+map_constructor_pres((lat1 + lat2) / 2, (lon1 + lon2) / 2, interpolated_data, square_corners)
