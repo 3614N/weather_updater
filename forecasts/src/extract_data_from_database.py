@@ -24,7 +24,7 @@ def get_weather_data(db_path: str, date: str, hour: str):
     query = f"""
     SELECT station, temp, dwpt, rhum, pres
     FROM data
-    WHERE date = '{date}' AND hour = '{hour}'
+    WHERE date LIKE '{date}%' AND hour = '{hour}'
     """
     cursor.execute(query)
 

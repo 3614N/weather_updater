@@ -20,8 +20,8 @@ def add_tables(link, is_archive: bool):
                 # Calculate average values for each date and hour over the years
                 df['month_day_hour'] = df['date'].dt.strftime('%m-%d') + ' ' + df['hour'].astype(str).str.zfill(2)
 
-                # Filter out non-numeric columns except 'stations' and 'coco'
-                numeric_cols = df.select_dtypes(include=['number']).columns.drop(['station', 'coco'])
+                # Filter out non-numeric columns except 'station' and 'coco'
+                numeric_cols = df.select_dtypes(include=['number']).columns
                 avg_df = df.groupby('month_day_hour').agg({**{col: 'mean' for col in numeric_cols}, 'station': 'first', 'coco': 'first'}).reset_index()
 
                 # Round numeric columns to 2 decimal places, except the last column
